@@ -4,7 +4,7 @@ The list of tools built on [OnlyWorlds](https://www.onlyworlds.com), and how a t
 
 Anyone can build a tool on OnlyWorlds today, with no sign-up: the API, the SDKs ([npm](https://www.npmjs.com/package/@onlyworlds/sdk), [PyPI](https://pypi.org/project/onlyworlds/)) and the [docs](https://onlyworlds.github.io) are public. This repository is for being **listed**: we read your tool against a short checklist, and a row here says what we read and when.
 
-**[List your tool →](../../issues/new?template=list-a-tool.yml)** · what it means, in full: [List your tool](https://onlyworlds.github.io/docs/development/list-your-tool/)
+**[List your tool →](../../issues/new?template=list-a-tool.yml)** · what it means, in full: [List your tool](https://onlyworlds.github.io/docs/development/list-your-tool)
 
 ## Three rungs
 

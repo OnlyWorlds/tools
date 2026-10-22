@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         Thanks for building on OnlyWorlds. This form is public, and so is the answer: the next developer can read what you wrote and what we found.
-        What "listed" means, and every line below in more words: https://onlyworlds.github.io/docs/development/list-your-tool/
+        What "listed" means, and every line below in more words: https://onlyworlds.github.io/docs/development/list-your-tool
         Never paste a key, a PIN or a world's data here.
 
   - type: input
