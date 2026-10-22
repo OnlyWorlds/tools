@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 
 const here = fileURLToPath(new URL('.', import.meta.url));
 const readme = readFileSync(join(here, 'README.md'), 'utf8');
-const block = readme.match(/```jsonc\n([\s\S]*?)```/);
+const block = readme.replace(/\r\n/g, '\n').match(/```jsonc\n([\s\S]*?)```/);
 if (!block) { console.log('FAIL: no jsonc example in README.md'); process.exit(1); }
 const example = JSON.parse(block[1].replace(/\s+\/\/[^\n]*/g, ''));
 if (example.tools.length !== 1) { console.log('FAIL: the README example holds one row'); process.exit(1); }
