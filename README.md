@@ -30,7 +30,7 @@ Lines 2 and 5 cannot be seen from outside: a row marks them **claimed**, or **re
 
 ## The file
 
-`tools.json` is the list. Every site that shows it (onlyworlds.com/tools, the docs) copies it in at build time. Only the maintainers write it, on a person's reading of each submission; `node check.mjs` checks its shape, and CI runs it on every push.
+`tools.json` is the list. A site that shows it copies it in at build time, never fetches it from GitHub in a browser. Only the maintainers write it, on a person's reading of each submission; `node check.mjs` checks its shape, and CI runs it on every push.
 
 ```jsonc
 {
@@ -69,8 +69,4 @@ Lines 2 and 5 cannot be seen from outside: a row marks them **claimed**, or **re
 }
 ```
 
-Every key is present (null when it does not apply); a key the check does not know is refused by name. The state a daily read finds (a host unreachable, a page changed since it was read) is shown beside a row by that read, never written into this file.
-
-## Show it
-
-A tool may show a small "Built on OnlyWorlds" or "Listed on OnlyWorlds" badge linking to its row. The badge proves nothing on its own; the row does.
+Every key is present (null when it does not apply); a key the check does not know is refused by name. What a later read of a tool's host finds is shown beside its row, never written into this file.
