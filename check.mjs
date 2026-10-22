@@ -41,7 +41,8 @@ function kind(where, key, v, spec) {
   else if (k === 'id') { if (typeof v !== 'string' || !ID.test(v)) bad('[a-z0-9-], 1 to 32'); }
   else if (k === 'https') { if (!str || !/^https:\/\/[^\s]+$/.test(v)) bad('an https URL'); }
   else if (k === 'date') { if (typeof v !== 'string' || !DATE.test(v) || v > today) bad('a date, YYYY-MM-DD, not in the future'); }
-  else if (k === 'prefix') { if (typeof v !== 'string' || !/^x_[a-z0-9]+(?:-[a-z0-9]+)*_$/.test(v)) bad('x_<tool>_'); }
+  // `atlas_` is the one older prefix keel keeps as written (before `x_<tool>_` existed); no new tool takes it.
+  else if (k === 'prefix') { if (typeof v !== 'string' || !(v === 'atlas_' || /^x_[a-z0-9]+(?:-[a-z0-9]+)*_$/.test(v))) bad('x_<tool>_'); }
   else if (k === 'rung') { if (!RUNGS.includes(v)) bad(RUNGS.join(' | ')); }
   else if (k === 'doors') {
     if (!Array.isArray(v) || v.length === 0 || v.some(d => !DOORS.includes(d)) || new Set(v).size !== v.length) bad(`a non-empty list of distinct ${DOORS.join(', ')}`);

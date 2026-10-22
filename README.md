@@ -20,7 +20,7 @@ Nothing is signed in that is not listed, and nothing is listed that is not built
 
 1. **It is what it says.** The URL serves the tool; the source is public, or the submission says why not.
 2. **Keys stay with the person.** The key and PIN are stored on the person's device or in their own environment, never on the tool's server.
-3. **It names itself.** A client name on its writes, an `x_<tool>_` prefix for its own fields, the `producer` line on folders it makes.
+3. **It names itself.** A client name on its writes, an `x_<tool>_` prefix for its own fields (Atlas keeps its older `atlas_`, which the server keeps as written), the `producer` line on folders it makes.
 4. **It speaks the wire.** Its calls are ones the API document describes; a folder it writes passes the folder lint; an `.owworld` it writes opens in the reference reader.
 5. **It is honest about what leaves the machine.** One sentence: what world data goes where.
 6. **The host answers, read from outside, signed out**: https and its certificate, no dangling name, the hosts its first page loads from.
@@ -46,7 +46,7 @@ Lines 2 and 5 cannot be seen from outside: a row marks them **claimed**, or **re
       "maker": "Who answers for it",
       "doors": ["api", "folder"],           // any of api, folder, owworld, mcp
       "client": "mytool",                   // its X-OW-Client name, or null; unique
-      "prefix": "x_mytool_",                // its own fields' prefix, or null
+      "prefix": "x_mytool_",                // its own fields' prefix (x_<tool>_; atlas_ for Atlas), or null
       "free_core": "What anyone can do for free.",
       "paid": "What costs, or null.",
       "rung": "listed",                     // built | listed | delisted

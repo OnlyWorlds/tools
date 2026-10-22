@@ -56,11 +56,13 @@ const clean = run(example);
 if (clean.code !== 0) problems.push(`the README example fails:\n${clean.out}`);
 const empty = run(doc());
 if (empty.code !== 0 || !empty.out.includes('An empty list')) problems.push('an empty list does not pass as empty');
+const older = run(doc(Object.assign(row(), { prefix: 'atlas_' })));
+if (older.code !== 0) problems.push(`Atlas's older prefix atlas_ fails:\n${older.out}`);
 for (const [name, d, word] of MUTANTS) {
   const got = run(d);
   if (got.code !== 1) problems.push(`${name}: exit ${got.code}, expected 1`);
   else if (!got.out.includes(word)) problems.push(`${name}: failed, but did not say "${word}":\n${got.out}`);
 }
 rmSync(dir, { recursive: true, force: true });
-if (problems.length) { for (const p of problems) console.log(`  ${p}`); console.log(`FAIL: ${problems.length} of ${MUTANTS.length + 2}`); process.exit(1); }
+if (problems.length) { for (const p of problems) console.log(`  ${p}`); console.log(`FAIL: ${problems.length} of ${MUTANTS.length + 3}`); process.exit(1); }
 console.log(`PASS: the README example passes, an empty list passes as empty, and ${MUTANTS.length} mutants each fail naming their cause.`);
