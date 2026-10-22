@@ -1,0 +1,100 @@
+name: List a tool
+description: Ask for your tool to be listed on OnlyWorlds. Each answer is read or marked as claimed; the listing shows which.
+title: "List: <your tool's name>"
+labels: ["submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for building on OnlyWorlds. This form is public, and so is the answer: the next developer can read what you wrote and what we found.
+        What "listed" means, and every line below in more words: https://onlyworlds.github.io/docs/development/list-your-tool/
+        Never paste a key, a PIN or a world's data here.
+
+  - type: input
+    id: name
+    attributes:
+      label: Name
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: URL
+      description: Where a person opens or gets the tool. https only.
+      placeholder: https://
+    validations:
+      required: true
+  - type: input
+    id: sentence
+    attributes:
+      label: One sentence
+      description: What it does for a person, as you would say it to them.
+    validations:
+      required: true
+
+  - type: textarea
+    id: source
+    attributes:
+      label: "1. Source"
+      description: A link to the source, or why it is not public.
+    validations:
+      required: true
+  - type: textarea
+    id: keys
+    attributes:
+      label: "2. Where keys are kept"
+      description: Where the key and PIN a person gives the tool are stored (their browser, a file on their machine, their own environment). A tool that keeps them on its own server is not listed.
+    validations:
+      required: true
+  - type: input
+    id: client
+    attributes:
+      label: "3. Its name on the wire"
+      description: The client name it sends as X-OW-Client ([a-z0-9-], up to 32), and the x_<tool>_ prefix it writes its own fields under. Leave blank if it only reads.
+      placeholder: "client: mytool · prefix: x_mytool_"
+  - type: checkboxes
+    id: doors
+    attributes:
+      label: "4. How it reaches a world"
+      options:
+        - label: The API (onlyworlds.com, v2)
+        - label: World folders (the folder format)
+        - label: .owworld files
+        - label: MCP
+  - type: textarea
+    id: leaves
+    attributes:
+      label: "5. What leaves the person's machine"
+      description: One or two sentences. What world data goes where (your server, a model provider, nowhere), the sentence a person would want before the first click.
+    validations:
+      required: true
+  - type: textarea
+    id: free-core
+    attributes:
+      label: "7. The free core"
+      description: What the tool is for, which anyone can use without paying and without an invite. A tool whose core is behind a wall is not listed.
+    validations:
+      required: true
+  - type: textarea
+    id: paid
+    attributes:
+      label: "7. Paid parts"
+      description: Anything that costs (hosting, models, exports, premium views), or "none".
+    validations:
+      required: true
+  - type: input
+    id: contact
+    attributes:
+      label: Who answers for it
+      description: A name and where to reach you if a reader finds a problem.
+    validations:
+      required: true
+  - type: checkboxes
+    id: understood
+    attributes:
+      label: Understood
+      options:
+        - label: The listing says when each line was read, and whether it was read by us or claimed by me.
+          required: true
+        - label: We read the tool's public pages from outside (line 6), signed out, and never past the first click.
+          required: true

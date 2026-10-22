@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: What the listing means and how a tool is read
+    url: https://onlyworlds.github.io/docs/development/list-your-tool/
+    about: The three rungs, the checklist, and the free-core rule.
+  - name: A bug or an idea for OnlyWorlds itself
+    url: https://www.onlyworlds.com/feedback
+    about: The feedback form, not this repository.
