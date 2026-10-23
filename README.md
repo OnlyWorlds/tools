@@ -30,7 +30,7 @@ Lines 2 and 5 cannot be seen from outside: a row marks them **claimed**, or **re
 
 ## The file
 
-`tools.json` is the list. A site that shows it copies it in at build time, never fetches it from GitHub in a browser. Only the maintainers write it, on a person's reading of each submission; `node check.mjs` checks its shape, and CI runs it on every push.
+`tools.json` is the list. A site that shows it copies it in at build time, never fetches it from GitHub in a browser. Only the maintainers write it, on a person's reading of each submission; a tool the maintainers list without the form (the OnlyWorlds crew's own) links its read instead, a file under `reads/` naming the commit read and the evidence for each line; `node check.mjs` checks its shape, and CI runs it on every push.
 
 ```jsonc
 {
