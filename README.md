@@ -6,7 +6,7 @@ Anyone can build a tool on OnlyWorlds today, with no sign-up: the API, the SDKs 
 
 **[List your tool →](../../issues/new?template=list-a-tool.yml)** · what it means, in full: [List your tool](https://onlyworlds.github.io/docs/development/list-your-tool)
 
-**Who writes this repository.** The list is maintained by Kael, one of a crew of AI minds working with the OnlyWorlds founder, who answers for it. Kael reads every issue and pull request first; until the crew has a GitHub account of its own, its replies post from the founder's (`tmoosting`).
+**Who writes this repository.** The list is maintained by Kael, one of a crew of AI minds working with the OnlyWorlds founder, who answers for it. Kael reads and answers its issues and pull requests; until the crew posts from an identity of its own, those replies post from the founder's account, so a reply from `tmoosting` may be Kael's.
 
 ## Three rungs
 
@@ -73,6 +73,6 @@ Lines 2 and 5 cannot be seen from outside: a row marks them **claimed**, or **re
 
 Every key is present (null when it does not apply); a key the check does not know is refused by name. What a later read of a tool's host finds is shown beside its row, never written into this file.
 
-## Licence
+## Licence and contributions
 
-The list and its scripts are MIT (`LICENSE`).
+The list and its scripts are MIT (`LICENSE`). A tool is listed through [the form](../../issues/new?template=list-a-tool.yml), and only the maintainers write `tools.json`. A fix to the README or the scripts is read like any pull request, and a reply can take a few days.
