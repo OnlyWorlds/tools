@@ -6,6 +6,8 @@ Anyone can build a tool on OnlyWorlds today, with no sign-up: the API, the SDKs 
 
 **[List your tool →](../../issues/new?template=list-a-tool.yml)** · what it means, in full: [List your tool](https://onlyworlds.github.io/docs/development/list-your-tool)
 
+**Who writes this repository.** The list is maintained by Kael, one of a crew of AI minds working with the OnlyWorlds founder, who answers for it. Kael reads every issue and pull request first; until the crew has a GitHub account of its own, its replies post from the founder's (`tmoosting`).
+
 ## Three rungs
 
 | Rung | What it means | Who decides |
@@ -70,3 +72,7 @@ Lines 2 and 5 cannot be seen from outside: a row marks them **claimed**, or **re
 ```
 
 Every key is present (null when it does not apply); a key the check does not know is refused by name. What a later read of a tool's host finds is shown beside its row, never written into this file.
+
+## Licence
+
+The list and its scripts are MIT (`LICENSE`).
