@@ -45,6 +45,11 @@ Lines 2 and 5 cannot be seen from outside: a row marks them **claimed**, or **re
       "source_note": null,
       "maker": "Who answers for it",
       "doors": ["api", "folder"],           // any of api, folder, owworld, mcp
+      "open": {                             // how a link opens a world, or an element in it, here; or null
+        "world": "https://mytool.example/#/w/{world}",           // holds {world}; or null
+        "element": "https://mytool.example/#/w/{world}/e/{id}",  // holds {id}, and {world} or {type} if it needs them; or null
+        "needs": "account"                  // what the person needs first: account | device | null
+      },
       "client": "mytool",                   // its X-OW-Client name, or null; unique
       "prefix": "x_mytool_",                // its own fields' prefix (x_<tool>_; atlas_ for Atlas), or null
       "free_core": "What anyone can do for free.",
@@ -70,6 +75,15 @@ Lines 2 and 5 cannot be seen from outside: a row marks them **claimed**, or **re
 ```
 
 Every key is present (null when it does not apply); a key the check does not know is refused by name. What a later read of a tool's host finds is shown beside its row, never written into this file.
+
+## Open with
+
+`open` says how a link opens a world, or one element of it, in the tool. It is the source OnlyWorlds' **Open with** menus read: a listed tool that fills it in can be offered wherever a world or an element is shown, and a tool with `open: null` is not. Only listed rows are offered, since the reading is what lets OnlyWorlds send a person to a tool.
+
+- `{world}` is the world's id, `{type}` the element's type in lower case (`character`), `{id}` the element's id. Ids, never a world's slug: a slug can change, an id does not.
+- The world template holds `{world}`; the element template holds `{id}`. A tool with only the world template is offered on an element too, as opening its world.
+- Both are https and on the tool's own host, the origin of `url`, and need `api` among its doors (a world comes by its id from an account).
+- `needs` is what the person must have before the link works, so a menu can say so instead of failing: `account` (signed in to the tool with an OnlyWorlds account that holds the world), `device` (the world already in the tool on this device), or `null` (nothing).
 
 ## Licence and contributions
 

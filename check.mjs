@@ -25,7 +25,7 @@ const LINES = ['what_it_says', 'keys_stay', 'names_itself', 'speaks_the_wire', '
 const INSIDE = ['keys_stay', 'what_leaves'];
 const ROW = {
   id: 'id', name: 'text', sentence: 'text', url: 'https', source: 'https|null', source_note: 'text|null',
-  maker: 'text', doors: 'doors', client: 'id|null', prefix: 'prefix|null', free_core: 'text', paid: 'text|null',
+  maker: 'text', doors: 'doors', open: 'open|null', client: 'id|null', prefix: 'prefix|null', free_core: 'text', paid: 'text|null',
   rung: 'rung', listed_on: 'date|null', listed_by: 'text|null', delisted_on: 'date|null', delisted_why: 'text|null',
   submission: 'https|null', checks: 'checks',
 };
@@ -47,7 +47,36 @@ function kind(where, key, v, spec) {
   else if (k === 'doors') {
     if (!Array.isArray(v) || v.length === 0 || v.some(d => !DOORS.includes(d)) || new Set(v).size !== v.length) bad(`a non-empty list of distinct ${DOORS.join(', ')}`);
   } else if (k === 'checks') checks(where, v);
+  else if (k === 'open') open(where, v);
 }
+
+// README § Open with. A template is filled with sample ids and must still be an https URL.
+const NEEDS = ['account', 'device'];
+const SAMPLE = { world: '01a0e97d-0000-7000-8000-000000000000', type: 'character', id: '01a0e97d-0000-7000-8000-000000000001' };
+function open(where, v) {
+  if (typeof v !== 'object' || Array.isArray(v)) { say(where, '`open` must be an object or null'); return; }
+  for (const k of Object.keys(v)) if (!['world', 'element', 'needs'].includes(k)) say(where, `open: unknown key \`${k}\``);
+  for (const k of ['world', 'element', 'needs']) if (!(k in v)) say(where, `open: \`${k}\` missing (null when it does not apply)`);
+  if (v.world == null && v.element == null) say(where, 'open: neither `world` nor `element`: an empty open is `open: null`');
+  if (v.needs !== null && v.needs !== undefined && !NEEDS.includes(v.needs)) say(where, `open: \`needs\` must be ${NEEDS.join(' | ')} | null`);
+  template(where, 'world', v.world, ['world'], ['world']);
+  template(where, 'element', v.element, ['id'], ['world', 'type', 'id']);
+}
+function template(where, key, v, must, may) {
+  if (v == null) return;
+  const w = `${where} open.${key}`;
+  if (typeof v !== 'string' || v !== v.trim() || !v.startsWith('https://')) { say(w, 'must be an https URL template'); return; }
+  const names = [...v.matchAll(/\{([^{}]*)\}/g)].map(m => m[1]);
+  for (const n of names) if (!may.includes(n)) say(w, `unknown placeholder {${n}}: it may hold ${may.map(x => `{${x}}`).join(', ')}`);
+  for (const n of must) if (!names.includes(n)) say(w, `must hold {${n}}`);
+  if (/[{}]/.test(v.replace(/\{[^{}]*\}/g, ''))) say(w, 'a brace outside a placeholder');
+  const filled = v.replace(/\{(world|type|id)\}/g, (_, n) => SAMPLE[n]);
+  let u;
+  try { u = new URL(filled); } catch { say(w, 'is not a URL once filled'); return; }
+  if (/\s/.test(filled)) say(w, 'holds a space');
+  template.origins.push([w, u.origin]);
+}
+template.origins = [];
 
 function checks(where, v) {
   if (typeof v !== 'object' || v === null || Array.isArray(v)) { say(where, '`checks` must be an object'); return; }
@@ -86,6 +115,11 @@ rows.forEach((r, i) => {
     if (!(k in r)) say(where, `\`${k}\` missing (null when it does not apply)`);
     else kind(where, k, r[k], spec);
   }
+  // An open link lands on the tool's own host, and a world comes by its id from an account.
+  let home = null;
+  try { home = new URL(r.url).origin; } catch { /* the url check above names it */ }
+  for (const [w, origin] of template.origins.splice(0)) if (home && origin !== home) say(w, `is on ${origin}, not the tool's own host ${home}`);
+  if (r.open != null && Array.isArray(r.doors) && !r.doors.includes('api')) say(where, 'open: a world opened by its id needs `api` among its doors');
   for (const k of ['id', 'url', 'client']) {
     if (r[k] == null) continue;
     const key = `${k}:${String(r[k]).toLowerCase()}`;

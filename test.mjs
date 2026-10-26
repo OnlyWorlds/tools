@@ -49,6 +49,19 @@ const MUTANTS = [
   ['delisted without why', (() => { const r = row(); r.rung = 'delisted'; r.delisted_on = r.listed_on; return doc(r); })(), '`delisted_why`'],
   ['unknown check line', (() => { const r = row(); r.checks.vibes = { result: 'pass', how: 'read', on: '2026-10-20' }; return doc(r); })(), 'unknown line `vibes`'],
   ['format 2', { format: 2, tools: [row()] }, '`format` must be 1'],
+  ['open: unknown key', (() => { const r = row(); r.open.label = 'x'; return doc(r); })(), 'open: unknown key `label`'],
+  ['open: needs missing', (() => { const r = row(); delete r.open.needs; return doc(r); })(), 'open: `needs` missing'],
+  ['open: empty', (() => { const r = row(); r.open.world = null; r.open.element = null; return doc(r); })(), 'an empty open is `open: null`'],
+  ['open: bad needs', (() => { const r = row(); r.open.needs = 'login'; return doc(r); })(), '`needs` must be'],
+  ['open: world without {world}', (() => { const r = row(); r.open.world = 'https://mytool.example/#/w/'; return doc(r); })(), 'open.world: must hold {world}'],
+  ['open: element without {id}', (() => { const r = row(); r.open.element = 'https://mytool.example/#/w/{world}'; return doc(r); })(), 'open.element: must hold {id}'],
+  ['open: a slug placeholder', (() => { const r = row(); r.open.world = 'https://mytool.example/#/w/{slug}/{world}'; return doc(r); })(), 'unknown placeholder {slug}'],
+  ['open: {id} in the world template', (() => { const r = row(); r.open.world = 'https://mytool.example/#/w/{world}/{id}'; return doc(r); })(), 'unknown placeholder {id}'],
+  ['open: a stray brace', (() => { const r = row(); r.open.element = 'https://mytool.example/#/w/{world}/e/{id'; return doc(r); })(), 'a brace outside a placeholder'],
+  ['open: http', (() => { const r = row(); r.open.world = 'http://mytool.example/#/w/{world}'; return doc(r); })(), 'must be an https URL template'],
+  ['open: another host', (() => { const r = row(); r.open.element = 'https://elsewhere.example/#/w/{world}/e/{id}'; return doc(r); })(), "not the tool's own host"],
+  ['open: no api door', (() => { const r = row(); r.doors = ['folder']; return doc(r); })(), 'needs `api` among its doors'],
+  ['open: not an object', (() => { const r = row(); r.open = 'https://mytool.example/#/w/{world}'; return doc(r); })(), '`open` must be an object or null'],
 ];
 
 const problems = [];
@@ -58,11 +71,15 @@ const empty = run(doc());
 if (empty.code !== 0 || !empty.out.includes('An empty list')) problems.push('an empty list does not pass as empty');
 const older = run(doc(Object.assign(row(), { prefix: 'atlas_' })));
 if (older.code !== 0) problems.push(`Atlas's older prefix atlas_ fails:\n${older.out}`);
+const closed = run(doc(Object.assign(row(), { open: null })));
+if (closed.code !== 0) problems.push(`a row with open: null fails:\n${closed.out}`);
+const worldOnly = run(doc(Object.assign(row(), { open: { world: 'https://mytool.example/#/w/{world}', element: null, needs: null } })));
+if (worldOnly.code !== 0) problems.push(`a world-only open fails:\n${worldOnly.out}`);
 for (const [name, d, word] of MUTANTS) {
   const got = run(d);
   if (got.code !== 1) problems.push(`${name}: exit ${got.code}, expected 1`);
   else if (!got.out.includes(word)) problems.push(`${name}: failed, but did not say "${word}":\n${got.out}`);
 }
 rmSync(dir, { recursive: true, force: true });
-if (problems.length) { for (const p of problems) console.log(`  ${p}`); console.log(`FAIL: ${problems.length} of ${MUTANTS.length + 3}`); process.exit(1); }
+if (problems.length) { for (const p of problems) console.log(`  ${p}`); console.log(`FAIL: ${problems.length} of ${MUTANTS.length + 5}`); process.exit(1); }
 console.log(`PASS: the README example passes, an empty list passes as empty, and ${MUTANTS.length} mutants each fail naming their cause.`);

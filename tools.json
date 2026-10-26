@@ -14,6 +14,11 @@
         "folder",
         "owworld"
       ],
+      "open": {
+        "world": "https://atlas.onlyworlds.com/#/open/{world}",
+        "element": "https://atlas.onlyworlds.com/#/open/{world}/element/{id}",
+        "needs": "account"
+      },
       "client": "atlas",
       "prefix": "atlas_",
       "free_core": "Make, browse and edit worlds as folders with no account; linking to a free onlyworlds.com account adds sync.",
@@ -77,6 +82,7 @@
         "api",
         "owworld"
       ],
+      "open": null,
       "client": "lantern",
       "prefix": null,
       "free_core": "Hold, search, edit and play worlds on your phone with no account; online sync, and Ask and Sort within a daily allowance, with a free account.",
