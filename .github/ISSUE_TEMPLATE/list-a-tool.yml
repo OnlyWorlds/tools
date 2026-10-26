@@ -82,6 +82,14 @@ body:
       description: Anything that costs (hosting, models, exports, premium views), or "none".
     validations:
       required: true
+  - type: textarea
+    id: open
+    attributes:
+      label: "Open with (optional)"
+      description: If a link can open a world, or one element of it, in your tool, its address with {world} for the world's id and {id} for the element's (and {type} if you need it), on your tool's own host, and what a person needs first (signed in to your tool, or the world already in it). OnlyWorlds' Open with menus offer listed tools from this.
+      placeholder: "https://mytool.example/#/w/{world}/e/{id} (needs: signed in)"
+    validations:
+      required: false
   - type: input
     id: contact
     attributes:
