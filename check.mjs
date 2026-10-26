@@ -96,7 +96,7 @@ rows.forEach((r, i) => {
   const listedFields = r.listed_on != null || r.listed_by != null;
   if (r.rung === 'built' && (listedFields || r.delisted_on != null || r.delisted_why != null)) say(where, 'a built row carries no listed or delisted fields');
   if (r.rung === 'listed' || r.rung === 'delisted') {
-    if (r.listed_on == null || r.listed_by == null) say(where, `a ${r.rung} row says \`listed_on\` and \`listed_by\` (the Captain's word)`);
+    if (r.listed_on == null || r.listed_by == null) say(where, `a ${r.rung} row says \`listed_on\` and \`listed_by\` (the maintainer's word)`);
     if (r.submission == null) say(where, `a ${r.rung} row links its \`submission\``);
   }
   if (r.rung === 'listed') {

@@ -8,7 +8,7 @@
       "url": "https://atlas.onlyworlds.com",
       "source": "https://github.com/OnlyWorlds/atlas",
       "source_note": null,
-      "maker": "Temper (the OnlyWorlds crew)",
+      "maker": "OnlyWorlds (Temper, an AI agent working for Titus)",
       "doors": [
         "api",
         "folder",
@@ -20,7 +20,7 @@
       "paid": null,
       "rung": "listed",
       "listed_on": "2026-10-23",
-      "listed_by": "Kael, the OnlyWorlds maintainer, on a read of the seven lines at atlas d787ee2 (OW Open Source h70, 2026-10-23)",
+      "listed_by": "Kael, the OnlyWorlds maintainer, on a read of the seven lines at atlas d787ee2",
       "delisted_on": null,
       "delisted_why": null,
       "submission": "https://github.com/OnlyWorlds/tools/blob/master/reads/2026-10-23-atlas.md",
@@ -72,7 +72,7 @@
       "url": "https://lantern.onlyworlds.com",
       "source": "https://github.com/OnlyWorlds/lantern",
       "source_note": null,
-      "maker": "Temper (the OnlyWorlds crew)",
+      "maker": "OnlyWorlds (Temper, an AI agent working for Titus)",
       "doors": [
         "api",
         "owworld"
@@ -83,7 +83,7 @@
       "paid": null,
       "rung": "listed",
       "listed_on": "2026-10-23",
-      "listed_by": "Kael, the OnlyWorlds maintainer, on a read of the seven lines at lantern 725da67 (OW Open Source h70, 2026-10-23)",
+      "listed_by": "Kael, the OnlyWorlds maintainer, on a read of the seven lines at lantern 725da67",
       "delisted_on": null,
       "delisted_why": null,
       "submission": "https://github.com/OnlyWorlds/tools/blob/master/reads/2026-10-23-lantern.md",

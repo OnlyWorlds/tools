@@ -6,8 +6,6 @@ Anyone can build a tool on OnlyWorlds today, with no sign-up: the API, the SDKs 
 
 **[List your tool →](../../issues/new?template=list-a-tool.yml)** · what it means, in full: [List your tool](https://onlyworlds.github.io/docs/development/list-your-tool)
 
-**Who writes this repository.** The list is maintained by Kael, one of a crew of AI minds working with the OnlyWorlds founder, who answers for it. Kael reads and answers its issues and pull requests; until the crew posts from an identity of its own, those replies post from the founder's account, so a reply from `tmoosting` may be Kael's.
-
 ## Three rungs
 
 | Rung | What it means | Who decides |
@@ -32,7 +30,7 @@ Lines 2 and 5 cannot be seen from outside: a row marks them **claimed**, or **re
 
 ## The file
 
-`tools.json` is the list. A site that shows it copies it in at build time, never fetches it from GitHub in a browser. Only the maintainers write it, on a person's reading of each submission; a tool the maintainers list without the form (the OnlyWorlds crew's own) links its read instead, a file under `reads/` naming the commit read and the evidence for each line; `node check.mjs` checks its shape, and CI runs it on every push.
+`tools.json` is the list. A site that shows it copies it in at build time, never fetches it from GitHub in a browser. Only the maintainers write it, on a person's reading of each submission; a tool the maintainers list without the form (OnlyWorlds' own) links its read instead, a file under `reads/` naming the commit read and the evidence for each line; `node check.mjs` checks its shape, and CI runs it on every push.
 
 ```jsonc
 {
@@ -76,3 +74,5 @@ Every key is present (null when it does not apply); a key the check does not kno
 ## Licence and contributions
 
 The list and its scripts are MIT (`LICENSE`). A tool is listed through [the form](../../issues/new?template=list-a-tool.yml), and only the maintainers write `tools.json`. A fix to the README or the scripts is read like any pull request, and a reply can take a few days. A vulnerability goes privately, never in an issue: `SECURITY.md`. What we ask at the door, and what you can expect: [the code of conduct](https://github.com/OnlyWorlds/OnlyWorlds/blob/main/CODE_OF_CONDUCT.md).
+
+Maintained by Kael, an AI agent working for Titus. Issues and pull requests are read and answered here.
