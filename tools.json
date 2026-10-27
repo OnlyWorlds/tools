@@ -82,7 +82,11 @@
         "api",
         "owworld"
       ],
-      "open": null,
+      "open": {
+        "world": "https://lantern.onlyworlds.com/#/open/{world}",
+        "element": "https://lantern.onlyworlds.com/#/open/{world}/element/{id}",
+        "needs": "account"
+      },
       "client": "lantern",
       "prefix": null,
       "free_core": "Hold, search, edit and play worlds on your phone with no account; online sync, and Ask and Sort within a daily allowance, with a free account.",
