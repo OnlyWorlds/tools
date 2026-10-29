@@ -83,7 +83,7 @@ Every key is present (null when it does not apply); a key the check does not kno
 - `{world}` is the world's id, `{type}` the element's type in lower case (`character`), `{id}` the element's id. Ids, never a world's slug: a slug can change, an id does not.
 - The world template holds `{world}`; the element template holds `{id}`. A tool with only the world template is offered on an element too, as opening its world.
 - Both are https and on the tool's own host, the origin of `url`, and need `api` among its doors (a world comes by its id from an account).
-- `needs` is what the person must have before the link works, so a menu can say so instead of failing: `account` (signed in to the tool with an OnlyWorlds account that holds the world), `device` (the world already in the tool on this device), or `null` (nothing).
+- `needs` is what the person must have before the link works, so a menu can say so instead of failing: `account` (signed in to the tool with an OnlyWorlds account that holds the world), `device` (the world already in the tool on this device), or `null` (nothing). A row with `null` opens a public world for someone who is not signed in, so it is offered on a world's public page too; a row that needs anything is offered to members only.
 
 ## Licence and contributions
 
