@@ -65,7 +65,16 @@ function open(where, v) {
 function template(where, key, v, must, may) {
   if (v == null) return;
   const w = `${where} open.${key}`;
-  if (typeof v !== 'string' || v !== v.trim() || !v.startsWith('https://')) { say(w, 'must be an https URL template'); return; }
+  // https on the tool's own host, or a link in the tool's own app scheme (never ow:, the standard's own
+  // address scheme, which the device hands to whichever app claimed it).
+  const scheme = typeof v === 'string' ? (v.match(/^([a-z][a-z0-9+.-]*):/) || [])[1] : undefined;
+  if (typeof v !== 'string' || v !== v.trim() || scheme === undefined || scheme === 'http') {
+    say(w, "must be an https URL template, or a link in the tool's own app scheme"); return;
+  }
+  if (scheme === 'ow') { say(w, "uses ow:, the standard's own address scheme, not a tool's: give the app a scheme of its own"); return; }
+  if (['javascript', 'data', 'vbscript', 'file', 'blob', 'about', 'ftp', 'mailto', 'tel'].includes(scheme)) {
+    say(w, `uses ${scheme}:, which opens no app: an app's own scheme or https`); return;
+  }
   const names = [...v.matchAll(/\{([^{}]*)\}/g)].map(m => m[1]);
   for (const n of names) if (!may.includes(n)) say(w, `unknown placeholder {${n}}: it may hold ${may.map(x => `{${x}}`).join(', ')}`);
   for (const n of must) if (!names.includes(n)) say(w, `must hold {${n}}`);
@@ -74,9 +83,11 @@ function template(where, key, v, must, may) {
   let u;
   try { u = new URL(filled); } catch { say(w, 'is not a URL once filled'); return; }
   if (/\s/.test(filled)) say(w, 'holds a space');
-  template.origins.push([w, u.origin]);
+  if (scheme === 'https') template.origins.push([w, u.origin]);
+  else template.apps.push([w, scheme]);
 }
 template.origins = [];
+template.apps = [];
 
 function checks(where, v) {
   if (typeof v !== 'object' || v === null || Array.isArray(v)) { say(where, '`checks` must be an object'); return; }
@@ -119,6 +130,11 @@ rows.forEach((r, i) => {
   let home = null;
   try { home = new URL(r.url).origin; } catch { /* the url check above names it */ }
   for (const [w, origin] of template.origins.splice(0)) if (home && origin !== home) say(w, `is on ${origin}, not the tool's own host ${home}`);
+  // A link into an app works only where the app is installed: the row needs the device, so a public
+  // page never offers it; both templates use the one scheme.
+  const apps = template.apps.splice(0);
+  for (const [w] of apps) if (r.open?.needs !== 'device') say(w, "opens an app: its row's `needs` must be `device`");
+  if (new Set(apps.map(([, s]) => s)).size > 1) say(where, 'open: both templates use the one app scheme');
   if (r.open != null && Array.isArray(r.doors) && !r.doors.includes('api')) say(where, 'open: a world opened by its id needs `api` among its doors');
   for (const k of ['id', 'url', 'client']) {
     if (r[k] == null) continue;

@@ -62,6 +62,10 @@ const MUTANTS = [
   ['open: another host', (() => { const r = row(); r.open.element = 'https://elsewhere.example/#/w/{world}/e/{id}'; return doc(r); })(), "not the tool's own host"],
   ['open: no api door', (() => { const r = row(); r.doors = ['folder']; return doc(r); })(), 'needs `api` among its doors'],
   ['open: not an object', (() => { const r = row(); r.open = 'https://mytool.example/#/w/{world}'; return doc(r); })(), '`open` must be an object or null'],
+  ['open: ow: is the standard\'s', (() => { const r = row(); r.open = { world: 'ow://{world}', element: null, needs: 'device' }; return doc(r); })(), "the standard's own address scheme"],
+  ['open: javascript:', (() => { const r = row(); r.open = { world: 'javascript:alert("{world}")', element: null, needs: 'device' }; return doc(r); })(), 'opens no app'],
+  ['open: an app link without the device', (() => { const r = row(); r.open = { world: 'mytool://open/{world}', element: null, needs: 'account' }; return doc(r); })(), "`needs` must be `device`"],
+  ['open: two app schemes', (() => { const r = row(); r.open = { world: 'mytool://open/{world}', element: 'other://open/{world}/{id}', needs: 'device' }; return doc(r); })(), 'the one app scheme'],
 ];
 
 const problems = [];
@@ -75,11 +79,13 @@ const closed = run(doc(Object.assign(row(), { open: null })));
 if (closed.code !== 0) problems.push(`a row with open: null fails:\n${closed.out}`);
 const worldOnly = run(doc(Object.assign(row(), { open: { world: 'https://mytool.example/#/w/{world}', element: null, needs: null } })));
 if (worldOnly.code !== 0) problems.push(`a world-only open fails:\n${worldOnly.out}`);
+const app = run(doc(Object.assign(row(), { open: { world: 'mytool://open/{world}', element: 'mytool://open/{world}/{type}/{id}', needs: 'device' } })));
+if (app.code !== 0) problems.push(`an app's own scheme with needs: device fails:\n${app.out}`);
 for (const [name, d, word] of MUTANTS) {
   const got = run(d);
   if (got.code !== 1) problems.push(`${name}: exit ${got.code}, expected 1`);
   else if (!got.out.includes(word)) problems.push(`${name}: failed, but did not say "${word}":\n${got.out}`);
 }
 rmSync(dir, { recursive: true, force: true });
-if (problems.length) { for (const p of problems) console.log(`  ${p}`); console.log(`FAIL: ${problems.length} of ${MUTANTS.length + 5}`); process.exit(1); }
-console.log(`PASS: the README example passes, an empty list passes as empty, and ${MUTANTS.length} mutants each fail naming their cause.`);
+if (problems.length) { for (const p of problems) console.log(`  ${p}`); console.log(`FAIL: ${problems.length} of ${MUTANTS.length + 6}`); process.exit(1); }
+console.log(`PASS: the README example passes, an empty list passes as empty, an app's own scheme passes, and ${MUTANTS.length} mutants each fail naming their cause.`);
