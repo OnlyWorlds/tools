@@ -52,13 +52,23 @@ function kind(where, key, v, spec) {
 
 // README § Open with. A template is filled with sample ids and must still be an https URL.
 const NEEDS = ['account', 'device'];
+const OPEN_KEYS = ['world', 'element', 'needs', 'element_skips'];
+// What an element door may leave out, in the graph reader's own words (the lens profile's graph section).
+const SKIPS = ['room', 'hidden', 'proposed', 'map_space', 'reading_aid'];
 const SAMPLE = { world: '01a0e97d-0000-7000-8000-000000000000', type: 'character', id: '01a0e97d-0000-7000-8000-000000000001' };
 function open(where, v) {
   if (typeof v !== 'object' || Array.isArray(v)) { say(where, '`open` must be an object or null'); return; }
-  for (const k of Object.keys(v)) if (!['world', 'element', 'needs'].includes(k)) say(where, `open: unknown key \`${k}\``);
+  for (const k of Object.keys(v)) if (!OPEN_KEYS.includes(k)) say(where, `open: unknown key \`${k}\``);
   for (const k of ['world', 'element', 'needs']) if (!(k in v)) say(where, `open: \`${k}\` missing (null when it does not apply)`);
+  if (!('element_skips' in v)) say(where, 'open: `element_skips` missing ([] when the element door opens every element, or there is none)');
   if (v.world == null && v.element == null) say(where, 'open: neither `world` nor `element`: an empty open is `open: null`');
   if (v.needs !== null && v.needs !== undefined && !NEEDS.includes(v.needs)) say(where, `open: \`needs\` must be ${NEEDS.join(' | ')} | null`);
+  const skips = v.element_skips;
+  if (skips !== undefined) {
+    if (!Array.isArray(skips) || skips.some((s) => !SKIPS.includes(s)) || new Set(skips).size !== skips.length) {
+      say(where, `open: \`element_skips\` must be a list of distinct ${SKIPS.join(', ')}, got ${JSON.stringify(skips)}`);
+    } else if (v.element == null && skips.length) say(where, 'open: `element_skips` names what an element door leaves out, and there is no element door: []');
+  }
   template(where, 'world', v.world, ['world'], ['world']);
   template(where, 'element', v.element, ['id'], ['world', 'type', 'id']);
 }

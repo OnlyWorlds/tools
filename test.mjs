@@ -65,6 +65,11 @@ const MUTANTS = [
   ['open: ow: is the standard\'s', (() => { const r = row(); r.open = { world: 'ow://{world}', element: null, needs: 'device' }; return doc(r); })(), "the standard's own address scheme"],
   ['open: javascript:', (() => { const r = row(); r.open = { world: 'javascript:alert("{world}")', element: null, needs: 'device' }; return doc(r); })(), 'opens no app'],
   ['open: an app link without the device', (() => { const r = row(); r.open = { world: 'mytool://open/{world}', element: null, needs: 'account' }; return doc(r); })(), "`needs` must be `device`"],
+  ['open: element_skips missing', (() => { const r = row(); delete r.open.element_skips; return doc(r); })(), 'open: `element_skips` missing'],
+  ['open: an unknown skip', (() => { const r = row(); r.open.element_skips = ['private']; return doc(r); })(), '`element_skips` must be a list of distinct'],
+  ['open: a skip twice', (() => { const r = row(); r.open.element_skips = ['room', 'room']; return doc(r); })(), '`element_skips` must be a list of distinct'],
+  ['open: skips not a list', (() => { const r = row(); r.open.element_skips = 'room'; return doc(r); })(), '`element_skips` must be a list of distinct'],
+  ['open: skips with no element door', (() => { const r = row(); r.open.element = null; r.open.element_skips = ['room']; return doc(r); })(), 'there is no element door'],
   ['open: two app schemes', (() => { const r = row(); r.open = { world: 'mytool://open/{world}', element: 'other://open/{world}/{id}', needs: 'device' }; return doc(r); })(), 'the one app scheme'],
 ];
 
@@ -77,9 +82,11 @@ const older = run(doc(Object.assign(row(), { prefix: 'atlas_' })));
 if (older.code !== 0) problems.push(`Atlas's older prefix atlas_ fails:\n${older.out}`);
 const closed = run(doc(Object.assign(row(), { open: null })));
 if (closed.code !== 0) problems.push(`a row with open: null fails:\n${closed.out}`);
-const worldOnly = run(doc(Object.assign(row(), { open: { world: 'https://mytool.example/#/w/{world}', element: null, needs: null } })));
+const worldOnly = run(doc(Object.assign(row(), { open: { world: 'https://mytool.example/#/w/{world}', element: null, needs: null, element_skips: [] } })));
 if (worldOnly.code !== 0) problems.push(`a world-only open fails:\n${worldOnly.out}`);
-const app = run(doc(Object.assign(row(), { open: { world: 'mytool://open/{world}', element: 'mytool://open/{world}/{type}/{id}', needs: 'device' } })));
+const skipping = run(doc(Object.assign(row(), { open: { ...row().open, element_skips: ['room', 'hidden', 'proposed', 'map_space', 'reading_aid'] } })));
+if (skipping.code !== 0) problems.push(`an element door that skips every kind fails:\n${skipping.out}`);
+const app = run(doc(Object.assign(row(), { open: { world: 'mytool://open/{world}', element: 'mytool://open/{world}/{type}/{id}', needs: 'device', element_skips: [] } })));
 if (app.code !== 0) problems.push(`an app's own scheme with needs: device fails:\n${app.out}`);
 for (const [name, d, word] of MUTANTS) {
   const got = run(d);
@@ -87,5 +94,5 @@ for (const [name, d, word] of MUTANTS) {
   else if (!got.out.includes(word)) problems.push(`${name}: failed, but did not say "${word}":\n${got.out}`);
 }
 rmSync(dir, { recursive: true, force: true });
-if (problems.length) { for (const p of problems) console.log(`  ${p}`); console.log(`FAIL: ${problems.length} of ${MUTANTS.length + 6}`); process.exit(1); }
-console.log(`PASS: the README example passes, an empty list passes as empty, an app's own scheme passes, and ${MUTANTS.length} mutants each fail naming their cause.`);
+if (problems.length) { for (const p of problems) console.log(`  ${p}`); console.log(`FAIL: ${problems.length} of ${MUTANTS.length + 7}`); process.exit(1); }
+console.log(`PASS: the README example passes, an empty list passes as empty, an app's own scheme passes, a door that skips every kind passes, and ${MUTANTS.length} mutants each fail naming their cause.`);
