@@ -18,7 +18,7 @@ Nothing is signed in that is not listed, and nothing is listed that is not built
 
 ## The checklist
 
-1. **It is what it says.** The URL serves the tool; the source is public, or the submission says why not.
+1. **It is what it says.** The URL serves the tool, and we can read its code: the source is public, or it is private and the maintainers are given read access to it, with one sentence on why it is private. A tool whose code we cannot read is not listed. It can still be built on OnlyWorlds and offered anywhere: the list is a showcase, not a door.
 2. **Keys stay with the person.** The key and PIN are stored on the person's device or in their own environment, never on the tool's server.
 3. **It names itself.** A client name on its writes, an `x_<tool>_` prefix for its own fields (Atlas keeps its older `atlas_`, which the server keeps as written), the `producer` line on folders it makes.
 4. **It speaks the wire.** Its calls are ones the API document describes; a folder it writes passes the folder lint; an `.owworld` it writes opens in the reference reader.
@@ -26,7 +26,7 @@ Nothing is signed in that is not listed, and nothing is listed that is not built
 6. **The host answers, read from outside, signed out**: https and its certificate, no dangling name, the hosts its first page loads from.
 7. **Its core is open and free.** What the tool is for works for anyone, without paying and without an invite. Extras may cost.
 
-Lines 2 and 5 cannot be seen from outside: a row marks them **claimed**, or **read in source** when the source is public and we read it. Every line carries the date it was read. What the list does not claim: that a tool is good, safe beyond these lines, or maintained.
+Lines 2 and 5 cannot be seen from outside, so we read them in the code: a row marks them **read in source** when the source is public, and **read in private source** when it is not, which says that nobody outside can check them. A listed row never marks them **claimed** (the maker's word alone). Every line carries the date it was read. What the list does not claim: that a tool is good, safe beyond these lines, or maintained.
 
 ## The file
 
@@ -41,7 +41,7 @@ Lines 2 and 5 cannot be seen from outside: a row marks them **claimed**, or **re
       "name": "My Tool",
       "sentence": "What it does for a person.",
       "url": "https://mytool.example",      // https, unique
-      "source": "https://github.com/me/mytool",  // or null, with source_note saying why
+      "source": "https://github.com/me/mytool",  // or null for private code the maintainers read, with source_note saying why
       "source_note": null,
       "maker": "Who answers for it",
       "doors": ["api", "folder"],           // any of api, folder, owworld, mcp
@@ -66,7 +66,7 @@ Lines 2 and 5 cannot be seen from outside: a row marks them **claimed**, or **re
         "keys_stay":       { "result": "pass", "how": "read in source", "on": "2026-10-20" },
         "names_itself":    { "result": "pass", "how": "read", "on": "2026-10-20" },
         "speaks_the_wire": { "result": "pass", "how": "read", "on": "2026-10-20" },
-        "what_leaves":     { "result": "pass", "how": "claimed", "on": "2026-10-20", "note": "Nothing leaves the browser." },
+        "what_leaves":     { "result": "pass", "how": "read in source", "on": "2026-10-20", "note": "Nothing leaves the browser." },
         "host":            { "result": "pass", "how": "read", "on": "2026-10-20" },
         "free_core":       { "result": "pass", "how": "read", "on": "2026-10-20" }
       }

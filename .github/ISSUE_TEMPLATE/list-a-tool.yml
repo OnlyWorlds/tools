@@ -1,5 +1,5 @@
 name: List a tool
-description: Ask for your tool to be listed on OnlyWorlds. Each answer is read or marked as claimed; the listing shows which.
+description: Ask for your tool to be listed on OnlyWorlds. We read each answer, from outside or in the tool's code; the listing shows which.
 title: "List: <your tool's name>"
 labels: ["submission"]
 body:
@@ -36,7 +36,7 @@ body:
     id: source
     attributes:
       label: "1. Source"
-      description: A link to the source, or why it is not public.
+      description: Is the source public? If so, a link. If not, one sentence on why, and whether you give the maintainers read access to the repository. We read every listed tool's code; a tool whose code we cannot read is not listed.
     validations:
       required: true
   - type: textarea
@@ -102,7 +102,7 @@ body:
     attributes:
       label: Understood
       options:
-        - label: The listing says when each line was read, and whether it was read by us or claimed by me.
+        - label: The listing says when each line was read, and whether we read it from outside, in public source or in private source.
           required: true
         - label: We read the tool's public pages from outside (line 6), signed out, and never past the first click.
           required: true

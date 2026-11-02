@@ -17,7 +17,9 @@ const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const ID = /^[a-z0-9-]{1,32}$/;
 const RUNGS = ['built', 'listed', 'delisted'];
 const DOORS = ['api', 'folder', 'owworld', 'mcp'];
-const HOW = ['read', 'read in source', 'claimed'];
+const HOW = ['read', 'read in source', 'read in private source', 'claimed'];
+// What a listed row's inside lines may say: read in the code, public or private, never claimed (README line 1).
+const INSIDE_LISTED = ['read in source', 'read in private source'];
 const RESULTS = ['pass', 'fail'];
 // The checklist's seven lines a row answers (line 8, the crawl rule, is ours, not the tool's).
 const LINES = ['what_it_says', 'keys_stay', 'names_itself', 'speaks_the_wire', 'what_leaves', 'host', 'free_core'];
@@ -110,7 +112,7 @@ function checks(where, v) {
     for (const k of Object.keys(c)) if (!['result', 'how', 'on', 'note'].includes(k)) say(w, `unknown key \`${k}\``);
     if (!RESULTS.includes(c.result)) say(w, `\`result\` must be ${RESULTS.join(' | ')}`);
     if (!HOW.includes(c.how)) say(w, `\`how\` must be ${HOW.join(' | ')}`);
-    else if (c.how === 'read' && INSIDE.includes(line)) say(w, 'cannot be read from outside: `claimed` or `read in source`');
+    else if (c.how === 'read' && INSIDE.includes(line)) say(w, 'cannot be read from outside: `read in source`, `read in private source` or `claimed`');
     if (typeof c.on !== 'string' || !DATE.test(c.on) || c.on > today) say(w, '`on` must be a date, not in the future');
     if (c.note !== undefined && (typeof c.note !== 'string' || c.note.trim() === '')) say(w, '`note`, when present, is text');
   }
@@ -166,6 +168,14 @@ rows.forEach((r, i) => {
       if (!c) say(where, `listed with checks.${line} unanswered`);
       else if (c.result !== 'pass') say(where, `listed with checks.${line} ${c.result}`);
       else if (r.listed_on && c.on > r.listed_on) say(where, `checks.${line} read ${c.on}, after its listing ${r.listed_on}`);
+    }
+    // Line 1: a listed tool's code is read by the maintainers, public or private, so its inside lines are read in it.
+    for (const line of INSIDE) {
+      const how = r.checks?.[line]?.how;
+      if (how === undefined) continue;
+      if (!INSIDE_LISTED.includes(how)) say(where, `listed with checks.${line} ${how}: a listed tool's code is read (\`read in source\` or \`read in private source\`)`);
+      else if (how === 'read in source' && r.source === null) say(where, `checks.${line} read in source, but \`source\` is null: \`read in private source\``);
+      else if (how === 'read in private source' && r.source !== null) say(where, `checks.${line} read in private source, but \`source\` is public: \`read in source\``);
     }
   }
   if (r.rung === 'delisted' && (r.delisted_on == null || r.delisted_why == null)) say(where, 'a delisted row says `delisted_on` and `delisted_why`');
