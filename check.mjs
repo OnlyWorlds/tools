@@ -54,7 +54,10 @@ function kind(where, key, v, spec) {
 
 // README § Open with. A template is filled with sample ids and must still be an https URL.
 const NEEDS = ['account', 'device'];
-const OPEN_KEYS = ['world', 'element', 'needs', 'element_skips'];
+const OPEN_KEYS = ['world', 'element', 'needs', 'element_skips', 'element_types'];
+// The standard's 22 element types, as type words (the `{type}` an address carries); the SDK's ELEMENT_TYPES is the same list.
+const TYPES = ['ability', 'character', 'collective', 'construct', 'creature', 'event', 'family', 'institution', 'language', 'law',
+  'location', 'map', 'marker', 'narrative', 'object', 'phenomenon', 'pin', 'relation', 'species', 'title', 'trait', 'zone'];
 // What an element door may leave out, in the graph reader's own words (the lens profile's graph section).
 const SKIPS = ['room', 'hidden', 'proposed', 'map_space', 'reading_aid'];
 const SAMPLE = { world: '01a0e97d-0000-7000-8000-000000000000', type: 'character', id: '01a0e97d-0000-7000-8000-000000000001' };
@@ -63,6 +66,7 @@ function open(where, v) {
   for (const k of Object.keys(v)) if (!OPEN_KEYS.includes(k)) say(where, `open: unknown key \`${k}\``);
   for (const k of ['world', 'element', 'needs']) if (!(k in v)) say(where, `open: \`${k}\` missing (null when it does not apply)`);
   if (!('element_skips' in v)) say(where, 'open: `element_skips` missing ([] when the element door opens every element, or there is none)');
+  if (!('element_types' in v)) say(where, 'open: `element_types` missing (null when the element door opens every type, or there is none)');
   if (v.world == null && v.element == null) say(where, 'open: neither `world` nor `element`: an empty open is `open: null`');
   if (v.needs !== null && v.needs !== undefined && !NEEDS.includes(v.needs)) say(where, `open: \`needs\` must be ${NEEDS.join(' | ')} | null`);
   const skips = v.element_skips;
@@ -70,6 +74,12 @@ function open(where, v) {
     if (!Array.isArray(skips) || skips.some((s) => !SKIPS.includes(s)) || new Set(skips).size !== skips.length) {
       say(where, `open: \`element_skips\` must be a list of distinct ${SKIPS.join(', ')}, got ${JSON.stringify(skips)}`);
     } else if (v.element == null && skips.length) say(where, 'open: `element_skips` names what an element door leaves out, and there is no element door: []');
+  }
+  const types = v.element_types;
+  if (types !== undefined && types !== null) {
+    if (!Array.isArray(types) || types.length === 0 || types.some((t) => !TYPES.includes(t)) || new Set(types).size !== types.length) {
+      say(where, `open: \`element_types\` must be null or a non-empty list of distinct type words (${TYPES.join(', ')}), got ${JSON.stringify(types)}`);
+    } else if (v.element == null) say(where, 'open: `element_types` names what an element door opens, and there is no element door: null');
   }
   template(where, 'world', v.world, ['world'], ['world']);
   template(where, 'element', v.element, ['id'], ['world', 'type', 'id']);

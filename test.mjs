@@ -72,6 +72,12 @@ const MUTANTS = [
   ['open: an unknown skip', (() => { const r = row(); r.open.element_skips = ['private']; return doc(r); })(), '`element_skips` must be a list of distinct'],
   ['open: a skip twice', (() => { const r = row(); r.open.element_skips = ['room', 'room']; return doc(r); })(), '`element_skips` must be a list of distinct'],
   ['open: skips not a list', (() => { const r = row(); r.open.element_skips = 'room'; return doc(r); })(), '`element_skips` must be a list of distinct'],
+  ['open: element_types missing', (() => { const r = row(); delete r.open.element_types; return doc(r); })(), 'open: `element_types` missing'],
+  ['open: an unknown type word', (() => { const r = row(); r.open.element_types = ['captain']; return doc(r); })(), '`element_types` must be null or a non-empty list'],
+  ['open: a type word in capitals', (() => { const r = row(); r.open.element_types = ['Character']; return doc(r); })(), '`element_types` must be null or a non-empty list'],
+  ['open: an empty type list', (() => { const r = row(); r.open.element_types = []; return doc(r); })(), '`element_types` must be null or a non-empty list'],
+  ['open: a type twice', (() => { const r = row(); r.open.element_types = ['character', 'character']; return doc(r); })(), '`element_types` must be null or a non-empty list'],
+  ['open: types with no element door', (() => { const r = row(); r.open.element = null; r.open.element_types = ['character']; return doc(r); })(), 'names what an element door opens, and there is no element door'],
   ['open: skips with no element door', (() => { const r = row(); r.open.element = null; r.open.element_skips = ['room']; return doc(r); })(), 'there is no element door'],
   ['open: two app schemes', (() => { const r = row(); r.open = { world: 'mytool://open/{world}', element: 'other://open/{world}/{id}', needs: 'device' }; return doc(r); })(), 'the one app scheme'],
 ];
@@ -85,11 +91,13 @@ const older = run(doc(Object.assign(row(), { prefix: 'atlas_' })));
 if (older.code !== 0) problems.push(`Atlas's older prefix atlas_ fails:\n${older.out}`);
 const closed = run(doc(Object.assign(row(), { open: null })));
 if (closed.code !== 0) problems.push(`a row with open: null fails:\n${closed.out}`);
-const worldOnly = run(doc(Object.assign(row(), { open: { world: 'https://mytool.example/#/w/{world}', element: null, needs: null, element_skips: [] } })));
+const worldOnly = run(doc(Object.assign(row(), { open: { world: 'https://mytool.example/#/w/{world}', element: null, needs: null, element_skips: [], element_types: null } })));
 if (worldOnly.code !== 0) problems.push(`a world-only open fails:\n${worldOnly.out}`);
 const skipping = run(doc(Object.assign(row(), { open: { ...row().open, element_skips: ['room', 'hidden', 'proposed', 'map_space', 'reading_aid'] } })));
 if (skipping.code !== 0) problems.push(`an element door that skips every kind fails:\n${skipping.out}`);
-const app = run(doc(Object.assign(row(), { open: { world: 'mytool://open/{world}', element: 'mytool://open/{world}/{type}/{id}', needs: 'device', element_skips: [] } })));
+const app = run(doc(Object.assign(row(), { open: { world: 'mytool://open/{world}', element: 'mytool://open/{world}/{type}/{id}', needs: 'device', element_skips: [], element_types: null } })));
+const oneKind = run(doc(Object.assign(row(), { open: { ...row().open, element_types: ['character'] } })));
+if (oneKind.code !== 0) problems.push(`an element door for Characters only fails:\n${oneKind.out}`);
 if (app.code !== 0) problems.push(`an app's own scheme with needs: device fails:\n${app.out}`);
 for (const [name, d, word] of MUTANTS) {
   const got = run(d);
@@ -97,5 +105,5 @@ for (const [name, d, word] of MUTANTS) {
   else if (!got.out.includes(word)) problems.push(`${name}: failed, but did not say "${word}":\n${got.out}`);
 }
 rmSync(dir, { recursive: true, force: true });
-if (problems.length) { for (const p of problems) console.log(`  ${p}`); console.log(`FAIL: ${problems.length} of ${MUTANTS.length + 7}`); process.exit(1); }
+if (problems.length) { for (const p of problems) console.log(`  ${p}`); console.log(`FAIL: ${problems.length} of ${MUTANTS.length + 8}`); process.exit(1); }
 console.log(`PASS: the README example passes, an empty list passes as empty, an app's own scheme passes, a door that skips every kind passes, and ${MUTANTS.length} mutants each fail naming their cause.`);

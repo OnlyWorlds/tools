@@ -49,7 +49,8 @@ Lines 2 and 5 cannot be seen from outside, so we read them in the code: a row ma
         "world": "https://mytool.example/#/w/{world}",           // holds {world}; or null
         "element": "https://mytool.example/#/w/{world}/e/{id}",  // holds {id}, and {world} or {type} if it needs them; or null
         "needs": "account",                 // what the person needs first: account | device | null
-        "element_skips": ["map_space"]      // what the element door does not open; [] for none
+        "element_skips": ["map_space"],     // what the element door does not open; [] for none
+        "element_types": null               // the types the element door opens; null for every type
       },
       "client": "mytool",                   // its X-OW-Client name, or null; unique
       "prefix": "x_mytool_",                // its own fields' prefix (x_<tool>_; atlas_ for Atlas), or null
@@ -86,6 +87,7 @@ Every key is present (null when it does not apply); a key the check does not kno
 - Both are https and on the tool's own host, the origin of `url`, and need `api` among its doors (a world comes by its id from an account).
 - A desktop or game app that opens a world itself may use its own registered scheme instead (`myapp://open/{world}`): one scheme for both templates, and `needs: device`, since the link works only where the app is installed, so a public page never offers it. Never `ow:`, the standard's own address scheme, which the device hands to whichever app claimed it; never a scheme that opens no app (`javascript:`, `data:`, `file:` and the like).
 - `element_skips` is what the element door does not open, so a menu never offers a link that can only fail: any of `room`, `hidden`, `proposed`, `map_space` (a Map, Pin or Marker; a Zone is content) and `reading_aid` (a Charter, its guide, its domains), each as the lens profile's graph section reads it. `[]` when it opens every element, and when there is no element door. A menu given the element leaves the row out for an element it names.
+- `element_types` is the element types the element door opens, as type words in lower case (`character`), so a tool that opens one kind of element is offered only on that kind: a non-empty list of distinct words from the 22, or `null` when it opens every type, and when there is no element door. A menu reads the type from the element's address, so it needs no element body for it, and leaves the row out on an element of another type; a world's menu is unchanged.
 - `needs` is what the person must have before the link works, so a menu can say so instead of failing: `account` (signed in to the tool with an OnlyWorlds account that holds the world), `device` (the world already in the tool on this device), or `null` (nothing). A row with `null` opens a public world for someone who is not signed in, so it is offered on a world's public page too; a row that needs anything is offered to members only.
 
 ## Licence and contributions
