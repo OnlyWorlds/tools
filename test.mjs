@@ -77,6 +77,10 @@ const MUTANTS = [
   ['open: a type word in capitals', (() => { const r = row(); r.open.element_types = ['Character']; return doc(r); })(), '`element_types` must be null or a non-empty list'],
   ['open: an empty type list', (() => { const r = row(); r.open.element_types = []; return doc(r); })(), '`element_types` must be null or a non-empty list'],
   ['open: a type twice', (() => { const r = row(); r.open.element_types = ['character', 'character']; return doc(r); })(), '`element_types` must be null or a non-empty list'],
+  ['open: opens_public a string', (() => { const r = row(); r.open.opens_public = 'yes'; return doc(r); })(), '`opens_public` must be true or false'],
+  ['open: opens_public null', (() => { const r = row(); r.open.opens_public = null; return doc(r); })(), '`opens_public` must be true or false'],
+  ['open: opens_public beside needs null', (() => { const r = row(); r.open.needs = null; r.open.opens_public = true; return doc(r); })(), '`opens_public` is true only beside'],
+  ['open: opens_public beside needs device', (() => { const r = row(); r.open.needs = 'device'; r.open.opens_public = true; return doc(r); })(), '`opens_public` is true only beside'],
   ['open: types with no element door', (() => { const r = row(); r.open.element = null; r.open.element_types = ['character']; return doc(r); })(), 'names what an element door opens, and there is no element door'],
   ['open: skips with no element door', (() => { const r = row(); r.open.element = null; r.open.element_skips = ['room']; return doc(r); })(), 'there is no element door'],
   ['open: two app schemes', (() => { const r = row(); r.open = { world: 'mytool://open/{world}', element: 'other://open/{world}/{id}', needs: 'device' }; return doc(r); })(), 'the one app scheme'],
@@ -98,6 +102,10 @@ if (skipping.code !== 0) problems.push(`an element door that skips every kind fa
 const app = run(doc(Object.assign(row(), { open: { world: 'mytool://open/{world}', element: 'mytool://open/{world}/{type}/{id}', needs: 'device', element_skips: [], element_types: null } })));
 const oneKind = run(doc(Object.assign(row(), { open: { ...row().open, element_types: ['character'] } })));
 if (oneKind.code !== 0) problems.push(`an element door for Characters only fails:\n${oneKind.out}`);
+const opensPublic = run(doc(Object.assign(row(), { open: { ...row().open, opens_public: true } })));
+if (opensPublic.code !== 0) problems.push(`an account row that opens a public world fails:\n${opensPublic.out}`);
+const noOpensPublic = run(doc((() => { const r = row(); delete r.open.opens_public; return r; })()));
+if (noOpensPublic.code !== 0) problems.push(`a row without opens_public fails:\n${noOpensPublic.out}`);
 if (app.code !== 0) problems.push(`an app's own scheme with needs: device fails:\n${app.out}`);
 for (const [name, d, word] of MUTANTS) {
   const got = run(d);
@@ -105,5 +113,5 @@ for (const [name, d, word] of MUTANTS) {
   else if (!got.out.includes(word)) problems.push(`${name}: failed, but did not say "${word}":\n${got.out}`);
 }
 rmSync(dir, { recursive: true, force: true });
-if (problems.length) { for (const p of problems) console.log(`  ${p}`); console.log(`FAIL: ${problems.length} of ${MUTANTS.length + 8}`); process.exit(1); }
+if (problems.length) { for (const p of problems) console.log(`  ${p}`); console.log(`FAIL: ${problems.length} of ${MUTANTS.length + 10}`); process.exit(1); }
 console.log(`PASS: the README example passes, an empty list passes as empty, an app's own scheme passes, a door that skips every kind passes, and ${MUTANTS.length} mutants each fail naming their cause.`);

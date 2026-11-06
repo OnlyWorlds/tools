@@ -54,7 +54,7 @@ function kind(where, key, v, spec) {
 
 // README § Open with. A template is filled with sample ids and must still be an https URL.
 const NEEDS = ['account', 'device'];
-const OPEN_KEYS = ['world', 'element', 'needs', 'element_skips', 'element_types'];
+const OPEN_KEYS = ['world', 'element', 'needs', 'element_skips', 'element_types', 'opens_public'];
 // The standard's 22 element types, as type words (the `{type}` an address carries); the SDK's ELEMENT_TYPES is the same list.
 const TYPES = ['ability', 'character', 'collective', 'construct', 'creature', 'event', 'family', 'institution', 'language', 'law',
   'location', 'map', 'marker', 'narrative', 'object', 'phenomenon', 'pin', 'relation', 'species', 'title', 'trait', 'zone'];
@@ -69,6 +69,12 @@ function open(where, v) {
   if (!('element_types' in v)) say(where, 'open: `element_types` missing (null when the element door opens every type, or there is none)');
   if (v.world == null && v.element == null) say(where, 'open: neither `world` nor `element`: an empty open is `open: null`');
   if (v.needs !== null && v.needs !== undefined && !NEEDS.includes(v.needs)) say(where, `open: \`needs\` must be ${NEEDS.join(' | ')} | null`);
+  // Optional: absent reads as false. True says a public world opens with no account, which only means something
+  // beside needs: account (a null row opens one already; a device row never reaches a public page).
+  if ('opens_public' in v) {
+    if (typeof v.opens_public !== 'boolean') say(where, `open: \`opens_public\` must be true or false, got ${JSON.stringify(v.opens_public)}`);
+    else if (v.opens_public && v.needs !== 'account') say(where, `open: \`opens_public\` is true only beside \`needs: "account"\`, got needs ${JSON.stringify(v.needs ?? null)}`);
+  }
   const skips = v.element_skips;
   if (skips !== undefined) {
     if (!Array.isArray(skips) || skips.some((s) => !SKIPS.includes(s)) || new Set(skips).size !== skips.length) {
