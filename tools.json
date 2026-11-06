@@ -19,7 +19,8 @@
         "element": "https://atlas.onlyworlds.com/#/open/{world}/element/{id}",
         "needs": "account",
         "element_skips": [],
-        "element_types": null
+        "element_types": null,
+        "opens_public": true
       },
       "client": "atlas",
       "prefix": "atlas_",
