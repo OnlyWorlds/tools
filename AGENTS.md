@@ -9,7 +9,7 @@ The public list of tools built on OnlyWorlds, `tools.json`, with the scripts tha
 Only the maintainer writes `tools.json` and the files under `reads/`, each row after a person has read the tool against the checklist. So:
 
 - To get a tool listed, open an issue with the "List a tool" form (`.github/ISSUE_TEMPLATE/list-a-tool.yml`). A pull request that adds or edits a row is not the way in.
-- A listed tool that is wrong or out of date is an ordinary issue. A vulnerability goes through GitHub's private vulnerability reporting, never an issue: `SECURITY.md`.
+- A listed tool that is wrong or out of date goes through the "Correct a listing" form (`.github/ISSUE_TEMPLATE/correct-a-listing.yml`); blank issues are off. A vulnerability goes through GitHub's private vulnerability reporting, never an issue: `SECURITY.md`.
 - A pull request is for `README.md`, `check.mjs`, `test.mjs` and `commit-words.mjs`.
 
 Issues and pull requests from anyone are welcome, and the maintainer answers them here.
@@ -30,7 +30,7 @@ node commit-words.mjs origin/master..HEAD   # your commit messages
 
 `commit-words.mjs` exits 0 when clean, 1 on a finding (each printed with the commit and line), and 2 when git cannot read the range, as on a shallow clone: 2 is not a pass. Clone with full history.
 
-Both live in `.github/workflows/check.yml`, which runs on every push and pull request: the job `check` runs `node check.mjs` and `node test.mjs`; the job `commits` runs `commit-words.mjs` over the commits the push or pull request adds.
+All three run from `.github/workflows/check.yml`, which runs on every push and pull request: the job `check` runs `node check.mjs` and `node test.mjs`; the job `commits` runs `commit-words.mjs` over the commits the push or pull request adds.
 
 ## How a change reaches master
 

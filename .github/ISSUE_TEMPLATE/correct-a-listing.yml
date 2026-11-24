@@ -1,0 +1,31 @@
+name: Correct a listing
+description: A listed tool's row is wrong or out of date (its link, its sentence, what it reads or writes). A tool that harms its users goes through SECURITY.md instead.
+title: "Correct: <the tool's name>"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This form is public. If the tool takes keys, writes to worlds it was not asked to, or is not what its row says, do not use it: report it privately, as SECURITY.md says.
+        Never paste a key, a PIN or a world's data here.
+
+  - type: input
+    id: tool
+    attributes:
+      label: The tool
+      description: Its name as the list shows it.
+    validations:
+      required: true
+  - type: textarea
+    id: wrong
+    attributes:
+      label: What is wrong
+      description: The line on the list as it reads now, and what is true instead.
+    validations:
+      required: true
+  - type: textarea
+    id: how
+    attributes:
+      label: How you know
+      description: A link, a version, or what you saw when you used it. Are you the tool's maintainer?
+    validations:
+      required: false
