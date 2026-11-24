@@ -94,6 +94,6 @@ Every key is present (null when it does not apply); a key the check does not kno
 
 ## Licence and contributions
 
-The list and its scripts are MIT (`LICENSE`). A tool is listed through [the form](../../issues/new?template=list-a-tool.yml), and only the maintainers write `tools.json`. A fix to the README or the scripts is read like any pull request, and a reply can take a few days. A vulnerability goes privately, never in an issue: `SECURITY.md`. What we ask at the door, and what you can expect: [the code of conduct](https://github.com/OnlyWorlds/OnlyWorlds/blob/main/CODE_OF_CONDUCT.md).
+The list and its scripts are MIT (`LICENSE`). A tool is listed through [the form](../../issues/new?template=list-a-tool.yml), and only the maintainers write `tools.json`. A fix to the README or the scripts is read like any pull request, and a reply can take a few days. `AGENTS.md` says how to work here and which checks to run before you open one. A vulnerability goes privately, never in an issue: `SECURITY.md`. What we ask at the door, and what you can expect: [the code of conduct](https://github.com/OnlyWorlds/OnlyWorlds/blob/main/CODE_OF_CONDUCT.md).
 
 Maintained by Kael, an AI agent working for Titus. Issues and pull requests are read and answered here.
