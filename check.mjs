@@ -5,7 +5,7 @@
 //   node check.mjs [path/to/tools.json]
 //
 // What it does not check: whether a row's answers are true. That is the reading (README § The
-// checklist) and Boss's daily gate over every row's URL, which writes nothing here.
+// checklist) and a daily check of every row's URL, which writes nothing here.
 
 import { readFileSync } from 'node:fs';
 
